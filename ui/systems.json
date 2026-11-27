@@ -1,0 +1,896 @@
+[
+  {
+    "systemId": "itg-1",
+    "systemName": "修繕・工事管理システム",
+    "screens": [
+      {
+        "id": "scr-1795783456622",
+        "name": "修繕依頼・進捗管理画面",
+        "purpose": "修繕依頼の受付・記録・共有、進捗ステータスの段階的記録・表示、リアルタイム照会機能を提供し、受付日時から完了日までの全段階を一元管理する",
+        "items": [
+          "修繕依頼一覧表示",
+          "修繕依頼検索・フィルタ",
+          "修繕依頼新規受付フォーム",
+          "修繕カテゴリ選択",
+          "依頼内容入力欄",
+          "依頼者情報表示",
+          "受付日時自動記録",
+          "修繕進捗ステータス表示",
+          "受付日時表示",
+          "見積提出日表示",
+          "承認日表示",
+          "工事予定日表示"
+        ]
+      },
+      {
+        "id": "scr-1795783468387",
+        "name": "立会い・見積書作成画面",
+        "purpose": "修繕依頼に対して現地立会いを実施し、修繕内容を入力・記録した上で見積書を自動生成し、見積提出日を記録する画面。スマートフォン対応により現地での効率的な情報入力を実現する。",
+        "items": [
+          "修繕依頼情報表示",
+          "立会い日時入力",
+          "修繕内容テキスト入力",
+          "修繕カテゴリ選択",
+          "工事予定日入力",
+          "工事予定期間入力",
+          "見積金額入力",
+          "見積書自動生成ボタン",
+          "見積提出日記録",
+          "立会い完了チェックボックス",
+          "施工写真添付",
+          "備考欄"
+        ]
+      },
+      {
+        "id": "scr-1795783479280",
+        "name": "承認フロー管理画面",
+        "purpose": "見積金額に基づく承認フロー管理、承認日記録、業者手配状態記録を一元管理し、修繕依頼の段階的な承認プロセスを効率化する",
+        "items": [
+          "修繕依頼一覧（金額・ステータス・申請者表示）",
+          "見積金額表示",
+          "承認フロー段階表示",
+          "現在の承認ステータス",
+          "承認権限者表示",
+          "承認ボタン",
+          "却下ボタン",
+          "承認日時自動記録",
+          "承認コメント入力欄",
+          "業者手配状態選択（未手配・手配済・完了）",
+          "業者手配日記録",
+          "業者情報表示"
+        ]
+      },
+      {
+        "id": "scr-1795783490825",
+        "name": "工事完了報告画面",
+        "purpose": "修繕工事の完了をスマートフォンで入力・報告し、完了日時・内容・施工写真を記録して完了状態を管理するための画面",
+        "items": [
+          "修繕依頼情報表示（依頼ID・内容・依頼者・施工箇所）",
+          "完了日時入力欄",
+          "工事内容入力欄",
+          "施工写真撮影ボタン",
+          "施工写真一覧表示",
+          "施工写真削除ボタン",
+          "立会い実施有無選択",
+          "立会い記録参照リンク",
+          "完了報告書プレビュー",
+          "完了報告書作成ボタン",
+          "完了報告書提出ボタン",
+          "工事完了状態更新ボタン"
+        ]
+      }
+    ],
+    "tableDefinitions": [
+      {
+        "tableName": "ログインユーザー",
+        "purpose": "修繕・工事管理システムのユーザー認証と権限管理を行うマスタテーブル",
+        "columns": [
+          {
+            "name": "ユーザーID",
+            "type": "uuid",
+            "required": true,
+            "description": "ユーザーの一意識別子"
+          },
+          {
+            "name": "ログインID",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "ログイン時に使用するユーザー識別名、システム内で一意"
+          },
+          {
+            "name": "パスワードハッシュ",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "ハッシュ化されたパスワード"
+          },
+          {
+            "name": "ユーザー名",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "ユーザーの表示名"
+          },
+          {
+            "name": "メールアドレス",
+            "type": "varchar(100)",
+            "required": false,
+            "description": "ユーザーの連絡先メールアドレス"
+          },
+          {
+            "name": "役割",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "ユーザーの権限レベル（管理者、担当者、閲覧者等）"
+          },
+          {
+            "name": "有効フラグ",
+            "type": "boolean",
+            "required": true,
+            "description": "ユーザーのアクティブ状態、falseの場合ログイン不可"
+          },
+          {
+            "name": "最終ログイン日時",
+            "type": "timestamp",
+            "required": false,
+            "description": "ユーザーが最後にログインした日時"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "ユーザーレコード作成日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "ユーザーレコード最終更新日時"
+          },
+          {
+            "name": "作成者",
+            "type": "varchar(100)",
+            "required": false,
+            "description": "ユーザーレコードを作成したユーザーID"
+          }
+        ]
+      },
+      {
+        "tableName": "修繕依頼",
+        "purpose": "修繕・工事の依頼内容を管理し、依頼から完了までのライフサイクルを追跡するテーブル",
+        "columns": [
+          {
+            "name": "修繕依頼ID",
+            "type": "uuid",
+            "required": true,
+            "description": "修繕依頼の一意識別子"
+          },
+          {
+            "name": "依頼者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "ログインユーザーテーブルへの外部キー、依頼を作成したユーザー"
+          },
+          {
+            "name": "依頼タイトル",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "修繕依頼の簡潔なタイトル"
+          },
+          {
+            "name": "依頼内容",
+            "type": "text",
+            "required": true,
+            "description": "修繕・工事の詳細な説明"
+          },
+          {
+            "name": "優先度",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "依頼の優先度レベル（高・中・低など）"
+          },
+          {
+            "name": "ステータス",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "依頼の現在の状態（未対応・対応中・完了・キャンセルなど）"
+          },
+          {
+            "name": "予定開始日",
+            "type": "timestamp",
+            "required": false,
+            "description": "修繕工事の予定開始日時"
+          },
+          {
+            "name": "予定完了日",
+            "type": "timestamp",
+            "required": false,
+            "description": "修繕工事の予定完了日時"
+          },
+          {
+            "name": "実際の完了日",
+            "type": "timestamp",
+            "required": false,
+            "description": "修繕工事の実際の完了日時"
+          },
+          {
+            "name": "予算額",
+            "type": "integer",
+            "required": false,
+            "description": "修繕工事の予算金額（円）"
+          },
+          {
+            "name": "実績額",
+            "type": "integer",
+            "required": false,
+            "description": "修繕工事の実績金額（円）"
+          },
+          {
+            "name": "担当者ID",
+            "type": "uuid",
+            "required": false,
+            "description": "ログインユーザーテーブルへの外部キー、工事を担当するユーザー"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "修繕依頼が作成された日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "修繕依頼が最後に更新された日時"
+          },
+          {
+            "name": "作成者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "ログインユーザーテーブルへの外部キー、依頼を作成したユーザー"
+          }
+        ]
+      },
+      {
+        "tableName": "修繕進捗ステータス",
+        "purpose": "修繕依頼の進捗状況を段階的に管理し、各ステータスの遷移履歴と詳細情報を記録するテーブル",
+        "columns": [
+          {
+            "name": "ステータスID",
+            "type": "uuid",
+            "required": true,
+            "description": "修繕進捗ステータスの一意識別子"
+          },
+          {
+            "name": "修繕依頼ID",
+            "type": "uuid",
+            "required": true,
+            "description": "関連する修繕依頼の外部キー"
+          },
+          {
+            "name": "ステータス区分",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "進捗ステータスの種類(受付、承認待ち、工事予定、工事中、完了、キャンセル等)"
+          },
+          {
+            "name": "ステータス開始日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "当該ステータスが開始された日時"
+          },
+          {
+            "name": "ステータス終了日時",
+            "type": "timestamp",
+            "required": false,
+            "description": "当該ステータスが終了した日時"
+          },
+          {
+            "name": "備考",
+            "type": "text",
+            "required": false,
+            "description": "ステータス遷移時の備考やコメント"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "レコード作成日時"
+          },
+          {
+            "name": "作成者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "レコード作成者のログインユーザーID"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "レコード最終更新日時"
+          },
+          {
+            "name": "更新者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "レコード最終更新者のログインユーザーID"
+          }
+        ]
+      },
+      {
+        "tableName": "立会い記録",
+        "purpose": "修繕工事の現場立会い時に記録される立会い内容、参加者、確認事項などを管理するテーブル",
+        "columns": [
+          {
+            "name": "立会い記録ID",
+            "type": "uuid",
+            "required": true,
+            "description": "立会い記録の一意識別子"
+          },
+          {
+            "name": "修繕依頼ID",
+            "type": "uuid",
+            "required": true,
+            "description": "関連する修繕依頼の識別子"
+          },
+          {
+            "name": "立会い日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "実際の立会い実施日時"
+          },
+          {
+            "name": "立会い場所",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "立会いが行われた現場の場所・部屋番号など"
+          },
+          {
+            "name": "立会い内容",
+            "type": "text",
+            "required": true,
+            "description": "立会い時に確認した内容・所見・指摘事項など"
+          },
+          {
+            "name": "立会い者ユーザーID",
+            "type": "uuid",
+            "required": true,
+            "description": "立会いを実施したユーザーの識別子"
+          },
+          {
+            "name": "施工者確認",
+            "type": "boolean",
+            "required": true,
+            "description": "施工者が立会い内容に同意したかどうか"
+          },
+          {
+            "name": "施工者名",
+            "type": "varchar(100)",
+            "required": false,
+            "description": "立会いに参加した施工者の名前"
+          },
+          {
+            "name": "写真添付フラグ",
+            "type": "boolean",
+            "required": false,
+            "description": "立会い時の写真が添付されているかどうか"
+          },
+          {
+            "name": "次アクション",
+            "type": "text",
+            "required": false,
+            "description": "立会い後の次のアクション・指示内容"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "立会い記録が作成された日時"
+          },
+          {
+            "name": "作成者ユーザーID",
+            "type": "uuid",
+            "required": true,
+            "description": "立会い記録を作成したユーザーの識別子"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "立会い記録が最後に更新された日時"
+          },
+          {
+            "name": "更新者ユーザーID",
+            "type": "uuid",
+            "required": true,
+            "description": "立会い記録を最後に更新したユーザーの識別子"
+          }
+        ]
+      },
+      {
+        "tableName": "見積書",
+        "purpose": "修繕依頼に対する見積もり情報を管理し、金額・内訳・有効期限などを記録するテーブル",
+        "columns": [
+          {
+            "name": "見積書ID",
+            "type": "uuid",
+            "required": true,
+            "description": "見積書の一意識別子"
+          },
+          {
+            "name": "修繕依頼ID",
+            "type": "uuid",
+            "required": true,
+            "description": "関連する修繕依頼への外部キー"
+          },
+          {
+            "name": "見積書番号",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "見積書の管理番号"
+          },
+          {
+            "name": "見積日",
+            "type": "timestamp",
+            "required": true,
+            "description": "見積書作成日"
+          },
+          {
+            "name": "有効期限",
+            "type": "timestamp",
+            "required": true,
+            "description": "見積書の有効期限"
+          },
+          {
+            "name": "合計金額",
+            "type": "integer",
+            "required": true,
+            "description": "見積もり合計金額（円）"
+          },
+          {
+            "name": "税抜金額",
+            "type": "integer",
+            "required": true,
+            "description": "税抜きの合計金額（円）"
+          },
+          {
+            "name": "税金",
+            "type": "integer",
+            "required": true,
+            "description": "消費税額（円）"
+          },
+          {
+            "name": "工事内容",
+            "type": "text",
+            "required": true,
+            "description": "修繕工事の詳細内容説明"
+          },
+          {
+            "name": "備考",
+            "type": "text",
+            "required": false,
+            "description": "見積書に関する備考・特記事項"
+          },
+          {
+            "name": "ステータス",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "見積書のステータス（未承認/承認/却下/期限切れ等）"
+          },
+          {
+            "name": "作成者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "見積書を作成したログインユーザーへの外部キー"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "見積書レコード作成日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "見積書レコード最終更新日時"
+          }
+        ]
+      },
+      {
+        "tableName": "承認フロー",
+        "purpose": "修繕依頼の承認プロセスを管理し、各承認段階の状態、承認者、承認日時を記録するテーブル",
+        "columns": [
+          {
+            "name": "承認フロー_ID",
+            "type": "uuid",
+            "required": true,
+            "description": "承認フローの一意識別子"
+          },
+          {
+            "name": "修繕依頼_ID",
+            "type": "uuid",
+            "required": true,
+            "description": "関連する修繕依頼の外部キー"
+          },
+          {
+            "name": "承認段階",
+            "type": "integer",
+            "required": true,
+            "description": "承認フローの段階番号（1から順序付け）"
+          },
+          {
+            "name": "承認者_ID",
+            "type": "uuid",
+            "required": true,
+            "description": "承認権限を持つユーザーの外部キー"
+          },
+          {
+            "name": "承認ステータス",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "承認状態（待機中、承認、却下、保留等）"
+          },
+          {
+            "name": "承認日時",
+            "type": "timestamp",
+            "required": false,
+            "description": "実際の承認または却下が行われた日時"
+          },
+          {
+            "name": "承認コメント",
+            "type": "text",
+            "required": false,
+            "description": "承認者による承認理由またはコメント"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "承認フロー記録の作成日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "承認フロー記録の最終更新日時"
+          }
+        ]
+      },
+      {
+        "tableName": "工事完了記録",
+        "purpose": "修繕工事の完了情報を記録し、工事の最終状態、完了日時、完了者、立会い結果などを管理するトランザクションテーブル",
+        "columns": [
+          {
+            "name": "工事完了記録ID",
+            "type": "uuid",
+            "required": true,
+            "description": "工事完了記録の一意識別子"
+          },
+          {
+            "name": "修繕依頼ID",
+            "type": "uuid",
+            "required": true,
+            "description": "関連する修繕依頼への外部キー"
+          },
+          {
+            "name": "完了日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "工事が完了した日時"
+          },
+          {
+            "name": "完了者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "工事を完了したログインユーザーへの外部キー"
+          },
+          {
+            "name": "立会い記録ID",
+            "type": "uuid",
+            "required": false,
+            "description": "関連する立会い記録への外部キー"
+          },
+          {
+            "name": "完了ステータス",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "完了状態を示すステータス値（完了、条件付き完了など）"
+          },
+          {
+            "name": "完了報告書",
+            "type": "text",
+            "required": false,
+            "description": "工事完了時の報告内容、実施内容、所見など"
+          },
+          {
+            "name": "実績金額",
+            "type": "integer",
+            "required": false,
+            "description": "実際に発生した工事費用（見積書との差異を追跡するため）"
+          },
+          {
+            "name": "追加工事フラグ",
+            "type": "boolean",
+            "required": true,
+            "description": "追加工事が発生したかどうかを示すフラグ"
+          },
+          {
+            "name": "追加工事内容",
+            "type": "text",
+            "required": false,
+            "description": "追加工事が発生した場合の内容説明"
+          },
+          {
+            "name": "立会い完了フラグ",
+            "type": "boolean",
+            "required": true,
+            "description": "依頼者による立会い・確認が完了したかどうか"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "工事完了記録が作成された日時"
+          },
+          {
+            "name": "作成者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "工事完了記録を作成したログインユーザーへの外部キー"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "工事完了記録が最後に更新された日時"
+          },
+          {
+            "name": "更新者ID",
+            "type": "uuid",
+            "required": true,
+            "description": "工事完了記録を最後に更新したログインユーザーへの外部キー"
+          }
+        ]
+      },
+      {
+        "tableName": "施工写真",
+        "purpose": "修繕工事の施工前・施工中・施工後の写真を管理し、工事の進捗状況と完了状況を視覚的に記録・確認するためのテーブル",
+        "columns": [
+          {
+            "name": "施工写真ID",
+            "type": "uuid",
+            "required": true,
+            "description": "施工写真の一意識別子"
+          },
+          {
+            "name": "修繕依頼ID",
+            "type": "uuid",
+            "required": true,
+            "description": "関連する修繕依頼への外部キー"
+          },
+          {
+            "name": "修繕進捗ステータスID",
+            "type": "uuid",
+            "required": false,
+            "description": "関連する修繕進捗ステータスへの外部キー"
+          },
+          {
+            "name": "工事完了記録ID",
+            "type": "uuid",
+            "required": false,
+            "description": "関連する工事完了記録への外部キー"
+          },
+          {
+            "name": "写真ファイルパス",
+            "type": "varchar(255)",
+            "required": true,
+            "description": "施工写真のファイルパスまたはURL"
+          },
+          {
+            "name": "写真タイプ",
+            "type": "varchar(50)",
+            "required": true,
+            "description": "写真の種類(施工前/施工中/施工後など)"
+          },
+          {
+            "name": "撮影日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "写真が撮影された日時"
+          },
+          {
+            "name": "説明",
+            "type": "text",
+            "required": false,
+            "description": "写真に関する説明やコメント"
+          },
+          {
+            "name": "撮影者",
+            "type": "varchar(100)",
+            "required": false,
+            "description": "写真を撮影したユーザーの識別情報"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "レコード作成日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "レコード最終更新日時"
+          },
+          {
+            "name": "作成者",
+            "type": "uuid",
+            "required": true,
+            "description": "レコードを作成したログインユーザーへの外部キー"
+          }
+        ]
+      },
+      {
+        "tableName": "修繕カテゴリマスタ",
+        "purpose": "修繕依頼の分類に使用するカテゴリ情報を一元管理し、依頼時の選択肢や統計分析の基準となるマスタデータ",
+        "columns": [
+          {
+            "name": "カテゴリID",
+            "type": "uuid",
+            "required": true,
+            "description": "修繕カテゴリの一意識別子"
+          },
+          {
+            "name": "カテゴリ名",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "修繕カテゴリの名称（例：電気設備、給排水、建具等）"
+          },
+          {
+            "name": "説明",
+            "type": "text",
+            "required": false,
+            "description": "カテゴリの詳細説明や対象範囲"
+          },
+          {
+            "name": "表示順序",
+            "type": "integer",
+            "required": true,
+            "description": "UI上での表示順序"
+          },
+          {
+            "name": "有効フラグ",
+            "type": "boolean",
+            "required": true,
+            "description": "カテゴリが利用可能かどうか（true:有効、false:無効）"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "レコード作成日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "レコード最終更新日時"
+          },
+          {
+            "name": "作成者",
+            "type": "uuid",
+            "required": true,
+            "description": "レコード作成者のユーザーID"
+          },
+          {
+            "name": "更新者",
+            "type": "uuid",
+            "required": false,
+            "description": "レコード最終更新者のユーザーID"
+          }
+        ]
+      },
+      {
+        "tableName": "ユーザー権限",
+        "purpose": "修繕・工事管理システムにおけるユーザーの操作権限を管理し、ロールベースのアクセス制御を実現するマスタテーブル",
+        "columns": [
+          {
+            "name": "権限ID",
+            "type": "uuid",
+            "required": true,
+            "description": "ユーザー権限の一意識別子"
+          },
+          {
+            "name": "ユーザーID",
+            "type": "uuid",
+            "required": true,
+            "description": "ログインユーザーテーブルへの外部キー参照"
+          },
+          {
+            "name": "ロール",
+            "type": "varchar(100)",
+            "required": true,
+            "description": "ユーザーに付与されるロール名（管理者、承認者、施工業者、依頼者等）"
+          },
+          {
+            "name": "修繕依頼作成",
+            "type": "boolean",
+            "required": true,
+            "description": "修繕依頼の作成権限有無"
+          },
+          {
+            "name": "修繕依頼編集",
+            "type": "boolean",
+            "required": true,
+            "description": "修繕依頼の編集権限有無"
+          },
+          {
+            "name": "修繕依頼削除",
+            "type": "boolean",
+            "required": true,
+            "description": "修繕依頼の削除権限有無"
+          },
+          {
+            "name": "見積書承認",
+            "type": "boolean",
+            "required": true,
+            "description": "見積書の承認権限有無"
+          },
+          {
+            "name": "進捗更新",
+            "type": "boolean",
+            "required": true,
+            "description": "修繕進捗ステータスの更新権限有無"
+          },
+          {
+            "name": "立会い記録作成",
+            "type": "boolean",
+            "required": true,
+            "description": "立会い記録の作成権限有無"
+          },
+          {
+            "name": "施工写真アップロード",
+            "type": "boolean",
+            "required": true,
+            "description": "施工写真のアップロード権限有無"
+          },
+          {
+            "name": "工事完了記録作成",
+            "type": "boolean",
+            "required": true,
+            "description": "工事完了記録の作成権限有無"
+          },
+          {
+            "name": "レポート閲覧",
+            "type": "boolean",
+            "required": true,
+            "description": "レポート・統計情報の閲覧権限有無"
+          },
+          {
+            "name": "有効フラグ",
+            "type": "boolean",
+            "required": true,
+            "description": "権限の有効・無効を示すフラグ"
+          },
+          {
+            "name": "作成日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "権限レコードの作成日時"
+          },
+          {
+            "name": "更新日時",
+            "type": "timestamp",
+            "required": true,
+            "description": "権限レコードの最終更新日時"
+          },
+          {
+            "name": "作成者",
+            "type": "uuid",
+            "required": true,
+            "description": "権限レコードを作成したユーザーID"
+          }
+        ]
+      }
+    ]
+  }
+]
